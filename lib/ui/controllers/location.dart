@@ -28,18 +28,16 @@ class LocationController extends GetxController {
   Future<void> updateLocation({required TrackedLocation location}) async {
     /* TODO: Usa [LocationManager.update] para actualizar la ubicacion y luego obten todas las ubicaciones de nuevo */
     await LocationManager.update(location: location);
-    await getAll();
+    _locations.value = await LocationManager.getAll();
   }
 
   Future<void> deleteLocation({required TrackedLocation location}) async {
     /* TODO: Con [LocationManager.delete] elimina la ubicacion y luego usa [removeWhere] para eliminar la ubicacion de [_locations.value] usando [_locations.update de GetX] */
     LocationManager.delete(location: location);
-
-    await LocationManager.getAll().then((value) {
-      _locations.update((val) {
-        val!.removeWhere((element) => element.uuid == location.uuid);
+    _locations.update((records) {
+        records!.removeWhere((record) => record.uuid == location.uuid);
       });
-    });
+    
     /* TODO: Ejemplo [https://github.com/jonataslaw/getx/blob/master/documentation/en_US/state_management.md]
       final user = User().obs;
 
